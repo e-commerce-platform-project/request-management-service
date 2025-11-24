@@ -1,6 +1,7 @@
 package ru.ivanov.ecommerceplatformproject.requestmanagementservice.model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.JdbcTypeCode;
@@ -13,6 +14,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "outbox")
+@Getter
 @NoArgsConstructor
 public class OutboxEvent {
 
@@ -53,5 +55,9 @@ public class OutboxEvent {
         this.requestId = requestId;
         this.eventType = eventType;
         this.payload = payload;
+    }
+
+    public void markAsSent() {
+        this.status = OutboxEventStatus.SENT;
     }
 }

@@ -8,6 +8,8 @@ import ru.ivanov.ecommerceplatformproject.requestmanagementservice.model.OutboxE
 import ru.ivanov.ecommerceplatformproject.requestmanagementservice.repository.OutboxEventRepository;
 import ru.ivanov.ecommerceplatformproject.requestmanagementservice.service.OutboxEventService;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class OutboxEventServiceImpl implements OutboxEventService {
@@ -18,5 +20,10 @@ public class OutboxEventServiceImpl implements OutboxEventService {
     @Transactional(propagation = Propagation.MANDATORY)
     public void save(OutboxEvent outboxEvent) {
         outboxEventRepository.save(outboxEvent);
+    }
+
+    @Override
+    public List<OutboxEvent> findPendingService() {
+        return outboxEventRepository.findAllByStatus_Pending();
     }
 }
