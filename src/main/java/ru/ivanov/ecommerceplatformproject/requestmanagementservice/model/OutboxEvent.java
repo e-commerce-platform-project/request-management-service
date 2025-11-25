@@ -7,7 +7,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 import ru.ivanov.ecommerceplatformproject.requestmanagementservice.model.enums.OutboxEventStatus;
-import ru.ivanov.ecommerceplatformproject.requestmanagementservice.model.enums.RequestType;
+import ru.ivanov.ecommerceplatformproject.sharedlibs.enums.EventType;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -26,15 +26,11 @@ public class OutboxEvent {
     @Column(name = "topic", nullable = false)
     private String topic;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "request_type", nullable = false)
-    private RequestType requestType;
-
     @Column(name = "request_id", nullable = false)
     private UUID requestId;
 
-    @Column(name = "event_type", nullable = false)
-    private String eventType;
+    @Column(name = "type", nullable = false)
+    private EventType type;
 
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "payload", nullable = false)
@@ -49,11 +45,10 @@ public class OutboxEvent {
     private Instant createdAt;
 
 
-    public OutboxEvent(String topic, RequestType requestType, UUID requestId, String eventType, String payload) {
+    public OutboxEvent(String topic, UUID requestId, EventType type, String payload) {
         this.topic = topic;
-        this.requestType = requestType;
         this.requestId = requestId;
-        this.eventType = eventType;
+        this.type = type;
         this.payload = payload;
     }
 

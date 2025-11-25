@@ -7,7 +7,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import ru.ivanov.ecommerceplatformproject.requestmanagementservice.model.enums.InitiatorType;
 import ru.ivanov.ecommerceplatformproject.requestmanagementservice.model.enums.RequestStatus;
-import ru.ivanov.ecommerceplatformproject.requestmanagementservice.model.enums.RequestType;
+import ru.ivanov.ecommerceplatformproject.sharedlibs.enums.RequestType;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -23,9 +23,9 @@ public abstract class Request {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(name = "type", nullable = false, updatable = false)
-    @Enumerated(EnumType.STRING)
-    private RequestType type;
+//    @Column(name = "type", nullable = false, updatable = false)
+//    @Enumerated(EnumType.STRING)
+//    private RequestType type;
 
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
@@ -46,8 +46,7 @@ public abstract class Request {
     @Column(name = "updated_at", nullable = false)
     private Instant updatedAt;
 
-    protected Request(RequestType type, RequestStatus status,  InitiatorType initiatorType, UUID initiatorId) {
-        this.type = type;
+    protected Request(RequestStatus status,  InitiatorType initiatorType, UUID initiatorId) {
         this.status = status;
         this.initiatorType = initiatorType;
         this.initiatorId = initiatorId;

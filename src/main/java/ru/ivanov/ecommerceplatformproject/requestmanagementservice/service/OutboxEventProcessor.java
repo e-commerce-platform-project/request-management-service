@@ -16,7 +16,7 @@ import java.util.concurrent.CompletableFuture;
 @RequiredArgsConstructor
 public class OutboxEventProcessor {
 
-    private OutboxEventService outboxEventService;
+    private final OutboxEventService outboxEventService;
     private final KafkaTemplate<String, Object> kafkaTemplate;
 
     @Transactional
@@ -41,7 +41,7 @@ public class OutboxEventProcessor {
 
         String kafkaKey = event.getRequestId().toString();
 
-        CompletableFuture<SendResult<String, String>> futureResult = kafkaTemplate.send(
+        CompletableFuture<SendResult<String, Object>> futureResult = kafkaTemplate.send(
                 event.getTopic(),
                 kafkaKey,
                 event
@@ -57,7 +57,7 @@ public class OutboxEventProcessor {
         });
     }
 
-    private void handleSuccess(OutboxEvent event, SendResult<String, String> result) {
+    private void handleSuccess(OutboxEvent event, SendResult<String, Object> result) {
         try {
             event.markAsSent();
             outboxEventService.save(event);

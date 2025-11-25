@@ -8,6 +8,6 @@ public record BrandCreationRequestDto(
 
         String logoUrl,
 
-        String website
+        String websiteUrl
 ) {
 }

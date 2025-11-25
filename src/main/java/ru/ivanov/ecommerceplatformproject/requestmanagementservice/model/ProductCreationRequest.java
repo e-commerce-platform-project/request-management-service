@@ -1,11 +1,11 @@
 package ru.ivanov.ecommerceplatformproject.requestmanagementservice.model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import ru.ivanov.ecommerceplatformproject.requestmanagementservice.dto.request.ProductCreationRequestDto;
 import ru.ivanov.ecommerceplatformproject.requestmanagementservice.model.enums.InitiatorType;
 import ru.ivanov.ecommerceplatformproject.requestmanagementservice.model.enums.RequestStatus;
-import ru.ivanov.ecommerceplatformproject.requestmanagementservice.model.enums.RequestType;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -13,6 +13,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "product_creation_requests")
+@Getter
 @NoArgsConstructor
 public final class ProductCreationRequest extends Request {
 
@@ -44,7 +45,7 @@ public final class ProductCreationRequest extends Request {
 
     public ProductCreationRequest(UUID sellerId, ProductCreationRequestDto requestDto) {
 
-        super(RequestType.PRODUCT_CREATION, RequestStatus.SUBMITTED, InitiatorType.SELLER, sellerId);
+        super(RequestStatus.SUBMITTED, InitiatorType.SELLER, sellerId);
 
         this.name = requestDto.name();
         this.description = requestDto.description();

@@ -5,15 +5,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.ivanov.ecommerceplatformproject.requestmanagementservice.dto.request.BrandCreationRequestDto;
 import ru.ivanov.ecommerceplatformproject.requestmanagementservice.dto.request.ProductCreationRequestDto;
-import ru.ivanov.ecommerceplatformproject.requestmanagementservice.event.RequestSubmittedEvent;
 import ru.ivanov.ecommerceplatformproject.requestmanagementservice.model.BrandCreationRequest;
 import ru.ivanov.ecommerceplatformproject.requestmanagementservice.model.OutboxEvent;
 import ru.ivanov.ecommerceplatformproject.requestmanagementservice.model.ProductCreationRequest;
-import ru.ivanov.ecommerceplatformproject.requestmanagementservice.model.enums.RequestType;
 import ru.ivanov.ecommerceplatformproject.requestmanagementservice.repository.BrandCreationRequestRepository;
 import ru.ivanov.ecommerceplatformproject.requestmanagementservice.repository.ProductCreationRequestRepository;
 import ru.ivanov.ecommerceplatformproject.requestmanagementservice.service.OutboxEventService;
 import ru.ivanov.ecommerceplatformproject.requestmanagementservice.service.RequestService;
+import ru.ivanov.ecommerceplatformproject.sharedlibs.enums.EventType;
+import ru.ivanov.ecommerceplatformproject.sharedlibs.event.BrandCreationRequestSubmitted;
+import ru.ivanov.ecommerceplatformproject.sharedlibs.event.ProductCreationRequestSubmitted;
 import tools.jackson.core.JacksonException;
 import tools.jackson.databind.ObjectMapper;
 
@@ -37,11 +38,17 @@ public class RequestServiceImpl implements RequestService {
 
         ProductCreationRequest savedRequest = productCreationRequestRepository.save(request);
 
-        RequestSubmittedEvent event = new RequestSubmittedEvent(
+        ProductCreationRequestSubmitted event = new ProductCreationRequestSubmitted(
                 UUID.randomUUID(),
                 savedRequest.getId(),
-                RequestType.PRODUCT_CREATION,
                 savedRequest.getInitiatorId(),
+                savedRequest.getName(),
+                savedRequest.getDescription(),
+                savedRequest.getBasePrice(),
+                savedRequest.getCategoryId(),
+                savedRequest.getBrandId(),
+                savedRequest.getMainImageUrl(),
+                savedRequest.getAdditionalImageUrls(),
                 Instant.now()
         );
 
@@ -50,9 +57,8 @@ public class RequestServiceImpl implements RequestService {
 
             OutboxEvent outboxEvent = new OutboxEvent(
                     "product-requests",
-                    event.requestType(),
                     event.requestId(),
-                    "RequestSubmitted", //todo
+                    EventType.PRODUCT_CREATION_REQUEST_SUBMITTED,
                     outboxEventPayload
             );
 
@@ -70,11 +76,13 @@ public class RequestServiceImpl implements RequestService {
 
         BrandCreationRequest savedRequest = brandCreationRequestRepository.save(request);
 
-        RequestSubmittedEvent event = new RequestSubmittedEvent(
+        BrandCreationRequestSubmitted event = new BrandCreationRequestSubmitted(
                 UUID.randomUUID(),
                 savedRequest.getId(),
-                RequestType.BRAND_CREATION,
                 savedRequest.getInitiatorId(),
+                savedRequest.getName(),
+                savedRequest.getLogoUrl(),
+                savedRequest.getWebsiteUrl(),
                 Instant.now()
         );
 
@@ -83,9 +91,8 @@ public class RequestServiceImpl implements RequestService {
 
             OutboxEvent outboxEvent = new OutboxEvent(
                     "brand-requests",
-                    event.requestType(),
                     event.requestId(),
-                    "RequestSubmitted", //todo
+                    EventType.BRAND_CREATION_REQUEST_SUBMITTED,
                     outboxEventPayload
             );
 
